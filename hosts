@@ -1,0 +1,11 @@
+[default]
+server
+client1
+client2
+
+[servers]
+server
+
+[clients]
+client1
+client2

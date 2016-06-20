@@ -1,0 +1,19 @@
+---
+
+# create dir for GOPATH
+- name: exist check $HOME/work
+  stat: path=/home/{{ login_user }}/work
+  register: is_work
+
+- name: create $HOME/work
+  file: dest=/home/{{ login_user }}/work state=directory owner={{ login_user }} group={{ login_user }}
+  when: not is_work.stat.exists
+
+# export go, GOPATH
+- name: echo 'export PATH=$PATH:/usr/local/go/bin' > /etc/profile
+  blockinfile:
+    state: present
+    dest: /etc/profile
+    content: |
+      export PATH=$PATH:/usr/local/go/bin
+      export GOPATH=$HOME/work

@@ -1,0 +1,10 @@
+---
+
+src_dir: '/usr/local/src'
+
+go_version: '1.6.2'
+go_name: "go{{ go_version }}.linux-amd64"
+go_dl_url: "https://storage.googleapis.com/golang/{{ go_name }}.tar.gz"
+
+login_user: vagrant
+login_group: vagrant

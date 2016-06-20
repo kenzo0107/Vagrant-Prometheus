@@ -1,0 +1,11 @@
+---
+
+src_dir: '/usr/local/src'
+
+prometheus_client_name: client_golang
+prometheus_client_git_url: "https://github.com/prometheus/{{ prometheus_client_name }}.git"
+
+supervisor_owner: vagrant
+supervisor_group: vagrant
+
+supervisord_directory: /etc/supervisord.d

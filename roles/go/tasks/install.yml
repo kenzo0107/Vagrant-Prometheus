@@ -1,0 +1,16 @@
+---
+
+- name: check go version
+  shell: /bin/bash -lc "go version | awk '{ print $3 }'"
+  register: goversion
+  # failed_when: goversion.rc not in [0, 1]
+
+- name: tar -zxvf https://storage.googleapis.com/golang/{{ go_name }}.tar.gz -C /usr/local/
+  unarchive:
+    src={{ go_dl_url }}
+    dest=/usr/local/
+    copy=no
+  when: goversion.stdout.find('go{{ go_version }}')
+
+- name: yum remove packages
+  yum: name=go state=absent

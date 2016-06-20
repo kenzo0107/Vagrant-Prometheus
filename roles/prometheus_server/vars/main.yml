@@ -1,0 +1,10 @@
+---
+
+prometheus_version: '0.20.0'
+prometheus_name: prometheus-{{ prometheus_version }}.linux-amd64
+prometheus_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/{{ prometheus_name }}.tar.gz"
+
+supervisor_owner: vagrant
+supervisor_group: vagrant
+
+supervisord_directory: /etc/supervisord.d

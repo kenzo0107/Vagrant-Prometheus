@@ -1,0 +1,4 @@
+---
+
+- include: install.yml
+- include: set_gopath.yml
