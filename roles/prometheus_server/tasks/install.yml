@@ -10,57 +10,7 @@
   file: src=/usr/local/{{ prometheus_name }} dest=/usr/local/prometheus state=link
 
 - name: create /usr/local/prometheus/prometheus.yml
-  template: src=roles/prometheus_server/templates/prometheus.yml dest=/usr/local/prometheus mode=0755
+  template: src=roles/prometheus_server/templates/prometheus.yml dest=/usr/local/prometheus mode=0775
 
-- name: exist check /etc/supervisord.conf
-  stat: path=/etc/supervisord.conf
-  register: is_supervisord_conf
-
-- name: create /etc/supervisord.conf
-  shell: /usr/bin/echo_supervisord_conf > /etc/supervisord.conf
-  when: not is_supervisord_conf.stat.exists
-
-- name: edit /etc/supervisord.conf
-  lineinfile:
-    dest: /etc/supervisord.conf
-    state: present
-    backrefs: yes
-    regexp: '{{ item.regexp }}'
-    line: '{{ item.line }}'
-  with_items:
-  - regexp: '^\;\[inet_http_server\]'
-    line: '[inet_http_server]'
-  - regexp: '^\;port=127.0.0.1:9001'
-    line: 'port=127.0.0.1:9001'
-  - regexp: '^\;\[include\]'
-    line: '[include]'
-  - regexp: '^\;files = relative\/directory\/\*.ini'
-    line: 'files = {{ supervisord_directory }}/*.ini'
-
-- name: exist check /etc/supervisord.d
-  stat: path={{ supervisord_directory }}
-  register: is_supervisord_d
-
-- name: create /etc/supervisord.d
-  file: dest={{ supervisord_directory }} state=directory owner={{ supervisor_owner }} group={{ supervisor_group }}
-  when: not is_supervisord_d.stat.exists
-
-- name: create /var/log/supervisor/jobs
-  file: dest=/var/log/supervisor/jobs state=directory owner={{ supervisor_owner }} group={{ supervisor_group }}
-
-- name: create /var/log/supervisor/jobs/prometheus_server-supervisord.log
-  file: dest=/var/log/supervisor/jobs/prometheus_server-supervisord.log state=touch owner={{ supervisor_owner }} group={{ supervisor_group }}
-
-- name: create or update /etc/supervisord.d/PrometheusClient.init
-  template: src=roles/prometheus_server/templates/PrometheusServer.ini dest={{ supervisord_directory }} mode=0755
-
-- name: start supervisord?
-  shell: ps aux | grep supervisord | grep -v grep | wc -l
-  register: is_running_supervisord
-
-- name: start supervisord
-  command: /usr/bin/supervisord -c /etc/supervisord.conf
-  when: is_running_supervisord.stdout != '1'
-
-- name: supervisorctl restart all
-  command: /usr/bin/supervisorctl restart all
+- name: create /usr/local/data
+  file: dest=/usr/local/data state=directory owner={{ supervisor_owner }} group={{ supervisor_group }} mode=0777
